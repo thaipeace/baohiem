@@ -1,0 +1,16 @@
+<?php
+
+function custom_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  $node = node_load(arg(1));
+  
+  if (strpos($form_id, 'webform_client_form_') !== false and $user->uid === 0 and $node->type === 'webform') {
+    $params = drupal_get_query_parameters();
+    
+    $ref_code = isset($params['refCode']) ? $params['refCode'] : '';
+    if (isset($ref_code)) {
+      $form['submitted']['refcode']['#default_value'] = $ref_code;
+      drupal_add_js('sites/default/modules/custom/custom.js', 'file');
+    }
+  }
+}
